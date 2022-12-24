@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        - DEV=true
+    ports:
+        - "8000:8000"
+    volumes:
+        - ./app:/app
+    command: >
+        sh -c "python manage.py runserver 0.0.0.0:8000"
+   
+
+# Here is the explanation for the code above:
+# 1. Now, we are using a volume instead of a bind mount. The difference between the two is that the volume is managed by Docker, and it can be shared between containers. The bind mount is managed by the host operating system, and it cannot be shared between containers.
+# 2. We have also changed the command. The command now has a long string of shell commands. This command uses the sh command to execute a shell script. The script contains a single command: runserver. This script is executed every time the container is started.
+# 3. The command is executed in the foreground, so the container will keep running until the command is stopped. If the command is stopped, the container will stop.
+
+# Let’s run the command again:
+
+# docker-compose up -d
+
+# And check the running containers:
+
+# docker container ls
+
+# Now, we have an application running in the container, but we cannot access it from the host machine. To fix this, we need to open port 8000 in the container and map it to a port on the host machine. We will also change the command to use gunicorn, which is a more production-ready version of Django’s development server.
+
+# # // File: docker-compose.yml
+# # // Language: dockercompose
+# version: "3.9"
+
+# services:
+#   app:
+#     build:
+#       context: .
+#       ports:
+#         - "8000:8000"
+#       volumes:
+#         - ./app:/app
+#       command: >
+#         sh -c "gunicorn app.wsgi:application --bind 

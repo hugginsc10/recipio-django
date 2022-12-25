@@ -14,4 +14,3 @@ class CalcTests(SimpleTestCase):
         Test that two numbers are added together.
         '''
         self.assertEqual(calc.add(3, 8), 11)
-        

@@ -12,7 +12,22 @@ services:
         - ./app:/app
     command: >
         sh -c "python manage.py runserver 0.0.0.0:8000"
-   
+    environment:
+      - DB_HOST=db
+      - DB_NAME=devdb
+      - DB_USER=devuser
+      - DB_PASS=devpass
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - dev-db-data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=devDB
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=devpass
+volumes:
+  dev-db-data:
+
 
 # Here is the explanation for the code above:
 # 1. Now, we are using a volume instead of a bind mount. The difference between the two is that the volume is managed by Docker, and it can be shared between containers. The bind mount is managed by the host operating system, and it cannot be shared between containers.

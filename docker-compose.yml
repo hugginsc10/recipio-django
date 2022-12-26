@@ -30,7 +30,6 @@ services:
 volumes:
   dev-db-data:
 
-
 # Here is the explanation for the code above:
 # 1. Now, we are using a volume instead of a bind mount. The difference between the two is that the volume is managed by Docker, and it can be shared between containers. The bind mount is managed by the host operating system, and it cannot be shared between containers.
 # 2. We have also changed the command. The command now has a long string of shell commands. This command uses the sh command to execute a shell script. The script contains a single command: runserver. This script is executed every time the container is started.

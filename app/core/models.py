@@ -55,4 +55,5 @@ class Recipe(models.Model):
     link = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
+        '''Allows us to see the title in Django Admin.'''
         return self.title

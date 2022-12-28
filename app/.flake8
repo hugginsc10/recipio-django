@@ -1,6 +1,6 @@
 
 [flake8]
-ignore = E3, W
+ignore = E, W
 exclude =
   migrations,
   __pycache__,

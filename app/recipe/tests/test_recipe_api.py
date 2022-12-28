@@ -172,7 +172,7 @@ class PrivateRecipeApiTests(TestCase):
 
     def test_delete_other_users_recipe_error(self):
         '''Test deleting a recipe of another user is unsuccessful.'''
-        new_user = create_user(user='user2@example.com', password='test123')
+        new_user = create_user(email='user2@example.com', password='test123')
         recipe = create_recipe(user=new_user)
 
         url = detail_url(recipe.id)

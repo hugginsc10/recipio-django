@@ -15,7 +15,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             'time_minutes',
             'price',
             'link',
-            'description'
+            'tags',
         ]
         read_only_fields = ['id']
 
@@ -29,7 +29,7 @@ class RecipeDetailSerializer(RecipeSerializer):
 
 class TagSerializer(serializers.ModelSerializer):
     '''Serializer for Tag objects.'''
-    
+
     class Meta:
         model = Tag
         fields = ['id', 'name']

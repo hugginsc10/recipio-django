@@ -40,6 +40,15 @@ def create_recipe(user, **params):
     recipe = Recipe.objects.create(user=user, **defaults)
     return recipe
 
+def create_tag(user, **params):
+    '''Create and return a sample tag.'''
+    defaults = {
+        'name': 'Sample Tag',
+    }
+    defaults.update(params)
+
+    return Tag.objects.create(user=user, **defaults)
+
 def create_user(**params):
     '''Create and return a sample user.'''
     return get_user_model().objects.create_user(**params)
@@ -203,7 +212,7 @@ class PrivateRecipeApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         recipes = Recipe.objects.filter(user=self.user)
-        self.assertEqual(recipies.count(), 1)
+        self.assertEqual(recipes.count(), 1)
         recipe = recipes[0]
         self.assertEqual(recipe.tags.count(), 2)
         for tag in payload['tags']:
@@ -213,4 +222,28 @@ class PrivateRecipeApiTests(TestCase):
             ).exists()
             self.assertTrue(exists)
 
-    
+    def test_create_recipe_with_existing_tags(self):
+        '''Test creating a recipe with existing tags.'''
+        tag1 = Tag.objects.create(user=self.user, name='Italian')
+        tag2 = create_tag(user=self.user, name='Chicken')
+        payload = {
+            'title': 'Pongal',
+            'time_minutes': 25,
+            'price': Decimal('9.99'),
+            'tags': [{'name': 'Indian'}, {'name': 'Breakfast'}],
+        }
+        res = self.client.post(RECIPES_URL, payload, format='json')
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        recipes = Recipe.objects.filter(user=self.user)
+        self.assertEqual(recipes.count(), 1)
+        recipe = recipes[0]
+        self.assertEqual(recipe.tags.count(), 2)
+        self.assertIn(tag1, recipe.tags.all())
+        self.assertIn(tag2, recipe.tags.all())
+        for tag in payload['tags']:
+            exists = recipe.tags.filter(
+                name=tag['name'],
+                user=self.user,
+            ).exists()
+            self.assertTrue(exists)

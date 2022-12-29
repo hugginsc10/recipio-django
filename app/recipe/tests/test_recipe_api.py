@@ -40,15 +40,6 @@ def create_recipe(user, **params):
     recipe = Recipe.objects.create(user=user, **defaults)
     return recipe
 
-def create_tag(user, **params):
-    '''Create and return a sample tag.'''
-    defaults = {
-        'name': 'Sample Tag',
-    }
-    defaults.update(params)
-
-    return Tag.objects.create(user=user, **defaults)
-
 def create_user(**params):
     '''Create and return a sample user.'''
     return get_user_model().objects.create_user(**params)
@@ -224,13 +215,12 @@ class PrivateRecipeApiTests(TestCase):
 
     def test_create_recipe_with_existing_tags(self):
         '''Test creating a recipe with existing tags.'''
-        tag1 = Tag.objects.create(user=self.user, name='Italian')
-        tag2 = create_tag(user=self.user, name='Chicken')
+        tag2 = Tag.objects.create(user=self.user, name='Chicken')
         payload = {
             'title': 'Pongal',
             'time_minutes': 25,
             'price': Decimal('9.99'),
-            'tags': [{'name': 'Indian'}, {'name': 'Breakfast'}],
+            'tags': [{'name': 'Chicken'}, {'name': 'Breakfast'}],
         }
         res = self.client.post(RECIPES_URL, payload, format='json')
 
@@ -239,7 +229,6 @@ class PrivateRecipeApiTests(TestCase):
         self.assertEqual(recipes.count(), 1)
         recipe = recipes[0]
         self.assertEqual(recipe.tags.count(), 2)
-        self.assertIn(tag1, recipe.tags.all())
         self.assertIn(tag2, recipe.tags.all())
         for tag in payload['tags']:
             exists = recipe.tags.filter(
@@ -272,7 +261,7 @@ class PrivateRecipeApiTests(TestCase):
         url = detail_url(recipe.id)
         res = self.client.patch(url, payload, format='json')
 
-        self.asserEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn(tag_lunch, recipe.tags.all())
         self.assertNotIn(tag_breakfast, recipe.tags.all())
 
@@ -287,5 +276,5 @@ class PrivateRecipeApiTests(TestCase):
         res = self.client.patch(url, payload, format='json')
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertNotIn(tag, recipe.tags.all())
+        self.assertEqual(recipe.tags.count(), 0)
 

@@ -12,6 +12,7 @@ from rest_framework.test import APIClient
 
 from core.models import (
     Recipe,
+    Tag,
 )
 
 from recipe.serializers import (
@@ -189,3 +190,27 @@ class PrivateRecipeApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
         self.assertTrue(Recipe.objects.filter(id=recipe.id).exists())
+
+    def test_create_recipe_with_new_tags(self):
+        '''Test creating a recipe with new tags.'''
+        payload = {
+            'title': 'Chicken Parmesean',
+            'time_minutes': 25,
+            'price': Decimal('19.99'),
+            'tags': [{'name': 'Italian'}, {'name': 'Chicken'}],
+        }
+        res = self.client.post(RECIPES_URL, payload, format='json')
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        recipes = Recipe.objects.filter(user=self.user)
+        self.assertEqual(recipies.count(), 1)
+        recipe = recipes[0]
+        self.assertEqual(recipe.tags.count(), 2)
+        for tag in payload['tags']:
+            exists = recipe.tags.filter(
+                name=tag['name'],
+                user=self.user,
+            ).exists()
+            self.assertTrue(exists)
+
+    

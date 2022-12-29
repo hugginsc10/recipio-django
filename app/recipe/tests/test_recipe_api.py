@@ -10,9 +10,15 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from core.models import Recipe
+from core.models import (
+    Recipe,
+    Tag,
+)
 
-from recipe.serializers import RecipeSerializer
+from recipe.serializers import (
+    RecipeSerializer,
+    RecipeDetailSerializer,
+)
 
 RECIPES_URL = reverse('recipe:recipe-list')
 
@@ -26,6 +32,8 @@ def create_recipe(user, **params):
         'title': 'Sample Recipe',
         'time_minutes': 10,
         'price': Decimal('5.00'),
+        'description':'Sample description',
+        'link': 'http://example.com/recipe.pdf',
     }
     defaults.update(params)
 
@@ -88,7 +96,7 @@ class PrivateRecipeApiTests(TestCase):
         url = detail_url(recipe.id)
         res = self.client.get(url)
 
-        serializer = RecipeSerializer(recipe)
+        serializer = RecipeDetailSerializer(recipe)
         self.assertEqual(res.data, serializer.data)
 
     def test_create_recipe(self):
@@ -132,12 +140,14 @@ class PrivateRecipeApiTests(TestCase):
             user=self.user,
             title='Sample Recipe Title',
             link=original_link,
+            description='Sample Recipe Description',
         )
 
         payload = {
             'title': 'New Recipe Title',
+            'link': 'https://example.com/recipe2.pdf',
             'time_minutes': 30,
-            'price': Decimal('5.99'),
+            'price': Decimal('2.50'),
         }
         url = detail_url(recipe.id)
         res = self.client.put(url, payload)

@@ -15,7 +15,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             'time_minutes',
             'price',
             'link',
-            'tags',
         ]
         read_only_fields = ['id']
 

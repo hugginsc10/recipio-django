@@ -61,7 +61,7 @@ class TagViewSet(BaseRecipeAttrViewSet):
             return serializers.TagSerializer
         return self.serializer_class
 
-class IngredientViewSet(BaseRecipeAttrViewSettingModel):
+class IngredientViewSet(BaseRecipeAttrViewSet):
     '''Manage ingredients in the database.'''
     serializer_class = serializers.IngredientSerializer
     queryset = Ingredient.objects.all()

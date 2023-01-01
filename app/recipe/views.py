@@ -4,7 +4,10 @@ Views for Recipe APIs.
 from rest_framework import (
     viewsets,
     mixins,
+    status,
 )
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
@@ -30,7 +33,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
         '''Return appropriate serializer class.'''
         if self.action == 'list':
             return serializers.RecipeSerializer
-
+        elif self.action == 'upload_image':
+            return serializers.RecipeImageSerializer
+        
         return self.serializer_class
 
     def perform_create(self, serializer):

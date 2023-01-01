@@ -10,7 +10,7 @@ services:
         - "8000:8000"
     volumes:
         - ./app:/app
-        - deb-static-data:/vol/web
+        - dev-static-data:/vol/web
     command: >
         sh -c "python manage.py wait_for_db &&
         python manage.py migrate &&
@@ -25,7 +25,7 @@ services:
   db:
     image: postgres:13-alpine
     volumes:
-      - dev-db-data:/var/lib/postgresql/data/
+      - ./data/db:/var/lib/postgresql/data/
     environment:
       - POSTGRES_DB=devdb
       - POSTGRES_USER=devuser
@@ -33,7 +33,7 @@ services:
 volumes:
   dev-db-data:
   dev-static-data:
-  
+
 # Here is the explanation for the code above:
 # 1. Now, we are using a volume instead of a bind mount. The difference between the two is that the volume is managed by Docker, and it can be shared between containers. The bind mount is managed by the host operating system, and it cannot be shared between containers.
 # 2. We have also changed the command. The command now has a long string of shell commands. This command uses the sh command to execute a shell script. The script contains a single command: runserver. This script is executed every time the container is started.

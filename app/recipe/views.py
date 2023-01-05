@@ -128,19 +128,12 @@ class BaseRecipeAttrViewSet(mixins.UpdateModelMixin,
         if assigned_only:
             queryset = queryset.filter(recipe__isnull=False)
 
-        return self.queryset.filter(user=self.request.user).order_by('-name').distinct()
+        return queryset.filter(user=self.request.user).order_by('-name').distinct()
 
 class TagViewSet(BaseRecipeAttrViewSet):
     '''Manage tags in the database.'''
     serializer_class = serializers.TagSerializer
     queryset = Tag.objects.all()
-
-
-    def get_serializer_class(self):
-        '''Return appropriate serializer class.'''
-        if self.action == 'list':
-            return serializers.TagSerializer
-        return self.serializer_class
 
 class IngredientViewSet(BaseRecipeAttrViewSet):
     '''Manage ingredients in the database.'''

@@ -155,6 +155,7 @@ class PrivateRecipeApiTests(TestCase):
         payload = {
             'title': 'New Recipe Title',
             'link': 'https://example.com/recipe2.pdf',
+            'description': 'New Recipe Description',
             'time_minutes': 30,
             'price': Decimal('2.50'),
         }
@@ -249,9 +250,7 @@ class PrivateRecipeApiTests(TestCase):
     def test_create_tag_on_update(self):
         '''Test creating tag when updating a recipe.'''
         recipe = create_recipe(user=self.user)
-        payload = {
-            'tags': [{'name': 'Lunch'}]
-        }
+        payload = {'tags': [{'name': 'Lunch'}]}
         url = detail_url(recipe.id)
         res = self.client.patch(url, payload, format='json')
 
@@ -315,7 +314,7 @@ class PrivateRecipeApiTests(TestCase):
         payload = {
             'title': 'Lemonade',
             'time_minutes': 3,
-            'price': Decimal('2.55'),
+            'price': '2.55',
             'ingredients': [{'name': 'Lemon'}, {'name': 'Sugar'}],
         }
         res = self.client.post(RECIPES_URL, payload, format='json')
@@ -336,9 +335,7 @@ class PrivateRecipeApiTests(TestCase):
     def test_create_ingredient_on_update(self):
         '''Test creating ingredient when updating a recipe.'''
         recipe = create_recipe(user=self.user)
-        payload = {
-            'ingredients': [{'name': 'Lemon'}]
-        }
+        payload = {'ingredients': [{'name': 'Lemon'}]}
         url = detail_url(recipe.id)
         res = self.client.patch(url, payload, format='json')
 
@@ -384,10 +381,7 @@ class PrivateRecipeApiTests(TestCase):
         recipe2.tags.add(tag2)
         recipe3 = create_recipe(user=self.user, title='Recipe 3')
         params = {'tags': f'{tag1.id}, {tag2.id}'}
-        res = self.client.get(
-            RECIPES_URL,
-            params
-        )
+        res = self.client.get(RECIPES_URL, params)
 
         serializer1 = RecipeSerializer(recipe1)
         serializer2 = RecipeSerializer(recipe2)
@@ -406,10 +400,7 @@ class PrivateRecipeApiTests(TestCase):
         recipe2.ingredients.add(ingredient2)
         recipe3 = create_recipe(user=self.user, title='Recipe 3')
         params = {'ingredients': f'{ingredient1.id}, {ingredient2.id}'}
-        res = self.client.get(
-            RECIPES_URL,
-            params
-        )
+        res = self.client.get(RECIPES_URL, params)
 
         serializer1 = RecipeSerializer(recipe1)
         serializer2 = RecipeSerializer(recipe2)

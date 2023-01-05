@@ -122,13 +122,14 @@ class PrivateIngredientsApiTests(TestCase):
             price=Decimal('12.00'),
             user=self.user
         )
-        recipe1.ingredients.add(ingredient)
         recipe2 = Recipe.objects.create(
-            title='Coriander eggs on toast',
+            title='Herb Eggs',
             time_minutes=20,
             price=Decimal('5.00'),
-            user=self.user
+            user=self.user,
         )
+
+        recipe1.ingredients.add(ingredient)
         recipe2.ingredients.add(ingredient)
 
         res = self.client.get(INGREDIENTS_URL, {'assigned_only': 1})

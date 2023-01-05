@@ -109,6 +109,9 @@ class BaseRecipeAttrViewSet(mixins.UpdateModelMixin,
 
     def get_queryset(self):
         '''Retrieve the objects for authenticated user.'''
+        assigned_only = bool(
+            int(self.request.query_params.get('assigned_only', 0))
+        )
         return self.queryset.filter(user=self.request.user).order_by('-name')
 
 class TagViewSet(BaseRecipeAttrViewSet):

@@ -1,12 +1,12 @@
 version: "3.9"
 
-service:
+services:
   app:
     build:
       context: .
     restart: always
     volumes:
-      - static-data:/vol/web
+      - static_data:/vol/web
     environment:
       - DB_HOST=db
       - DB_NAME=${DB_NAME}
@@ -36,8 +36,8 @@ service:
     ports:
       - 80:8000
     volumes:
-      - static-data:/vol/static
+      - static_data:/vol/static
 
 volumes:
   postgres-data:
-  static-data:
+  static_data:
